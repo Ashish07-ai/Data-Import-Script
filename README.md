@@ -1,61 +1,83 @@
-# Data-Import-Script
-import os
-import requests
-import tarfile
+# Multi-Domain Sentiment Dataset Preprocessing for BERT
 
-# Define the URLs for downloading the datasets
-urls = {
-    "unprocessed": "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/unprocessed.tar.gz",
-    "processed_acl": "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/processed_acl.tar.gz",
-    "processed_stars": "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/processed_stars.tar.gz"
-}
+## Overview
+This project aims to download, preprocess, and prepare the Multi-Domain Sentiment Dataset for use with the BERT model. The dataset contains product reviews from various domains, and the preprocessing script formats the data for NLP tasks, particularly sentiment analysis.
 
-# Create a directory to store the dataset
-data_dir = "multi_domain_sentiment_dataset"
-os.makedirs(data_dir, exist_ok=True)
+## Dataset
+The Multi-Domain Sentiment Dataset is designed for domain adaptation in sentiment classification. It contains product reviews from Amazon.com, covering multiple domains such as books, DVDs, and electronics. Each review is labeled with a star rating that can be converted into binary labels.
 
-def download_and_extract(url, directory):
-    """Download and extract a tar.gz file."""
-    response = requests.get(url)
-    tar_path = os.path.join(directory, os.path.basename(url))
+- **Download Links:**
+  - [Unprocessed Data (unprocessed.tar.gz)](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/unprocessed.tar.gz) (1.5 G)
+  - [Processed Data (processed_acl.tar.gz)](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/processed_acl.tar.gz) (19 M)
+  - [Processed Stars Data (processed_stars.tar.gz)](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/processed_stars.tar.gz) (33 M)
 
-    # Write the tar file
-    with open(tar_path, 'wb') as file:
-        file.write(response.content)
+## Requirements
+- Python 3.6 or higher
+- Requests library
 
-    # Extract the tar file
-    with tarfile.open(tar_path, "r:gz") as tar:
-        tar.extractall(path=directory)
-    print(f"Downloaded and extracted: {url}")
+You can install the required libraries using pip:
 
-# Download and extract all datasets
-for name, url in urls.items():
-    download_and_extract(url, data_dir)
+```bash
+pip install requests
 
-# Example of preprocessing the data
-def preprocess_data(data_directory):
-    """Preprocess the reviews to create a structured dataset for BERT."""
-    processed_data = []
-    
-    for domain in os.listdir(data_directory):
-        domain_path = os.path.join(data_directory, domain)
-        if os.path.isdir(domain_path):
-            # Read the processed.review.balanced file
-            processed_file_path = os.path.join(domain_path, "processed.review.balanced")
-            if os.path.isfile(processed_file_path):
-                with open(processed_file_path, 'r') as f:
-                    for line in f:
-                        # The last token in each line is the label
-                        parts = line.strip().split(' ')
-                        label = parts[-1].split(':')[-1]  # Get label from the last token
-                        text = ' '.join(parts[:-1])  # Join the rest as the review text
-                        processed_data.append((text, label))
 
-    return processed_data
+Here's the final README file in a single snippet for you to copy and paste:
 
-# Preprocess the dataset
-preprocessed_reviews = preprocess_data(data_dir)
+markdown
+Copy code
+# Multi-Domain Sentiment Dataset Preprocessing for BERT
 
-# Show a sample of the preprocessed data
-for review, label in preprocessed_reviews[:5]:
-    print(f"Review: {review}\nLabel: {label}\n")
+## Overview
+This project aims to download, preprocess, and prepare the Multi-Domain Sentiment Dataset for use with the BERT model. The dataset contains product reviews from various domains, and the preprocessing script formats the data for NLP tasks, particularly sentiment analysis.
+
+## Dataset
+The Multi-Domain Sentiment Dataset is designed for domain adaptation in sentiment classification. It contains product reviews from Amazon.com, covering multiple domains such as books, DVDs, and electronics. Each review is labeled with a star rating that can be converted into binary labels.
+
+- **Download Links:**
+  - [Unprocessed Data (unprocessed.tar.gz)](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/unprocessed.tar.gz) (1.5 G)
+  - [Processed Data (processed_acl.tar.gz)](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/processed_acl.tar.gz) (19 M)
+  - [Processed Stars Data (processed_stars.tar.gz)](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/processed_stars.tar.gz) (33 M)
+
+## Requirements
+- Python 3.6 or higher
+- Requests library
+
+You can install the required libraries using pip:
+
+```bash
+pip install requests
+Setup
+Clone this repository or download the script file.
+Ensure you have Python and the necessary libraries installed.
+Usage
+Run the script to download and preprocess the dataset:
+bash
+Copy code
+python download_and_preprocess.py
+The script will create a directory named multi_domain_sentiment_dataset and download the datasets into it. The processed reviews will be stored in a structured format suitable for BERT.
+
+You can view the preprocessed data by examining the output printed by the script, which displays sample reviews along with their labels.
+
+Code Structure
+download_and_preprocess.py: The main script that handles downloading and preprocessing the dataset.
+multi_domain_sentiment_dataset/: Directory containing the downloaded and extracted datasets.
+Example Output
+The script will print a sample of the preprocessed reviews and labels, like so:
+Review: This book was a fantastic read, very engaging!
+Label: positive
+
+Review: I found this product to be quite disappointing.
+Label: negative
+Notes
+Ensure that you have enough disk space, as the unprocessed dataset is approximately 1.5 GB in size.
+The preprocessed data is formatted to be compatible with BERT, making it easier to integrate into your NLP models.
+License
+This project is licensed under the MIT License. Feel free to use and modify the code as needed.
+
+Contact
+For any questions or issues regarding this project, please reach out to Ashish Thapa at ashish.thapa2@students.mq.edu.au
+
+
+
+
+
